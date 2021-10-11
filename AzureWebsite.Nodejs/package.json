@@ -1,0 +1,20 @@
+{
+  "name": "azure-website.nodejs",
+  "version": "0.0.0",
+  "description": "A basic framework web site to demonstrate the use of Node.Js, gulp, jade/pug, sass and typescript to build a static easy maintainable source code",
+  "main": "app.js",
+  "author": {
+    "name": "Rickard Nisses-Gagnér"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-pug": "^5.0.0",
+    "open": "^8.2.1"
+  }
+}

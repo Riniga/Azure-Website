@@ -1,0 +1,10 @@
+﻿extends ../templates/startpage.pug
+block content
+  main.inner(role='main')
+      h2.cover-heading Hämtar bilder direkt från Azure Storage
+      div.row
+        div#filelist.column
+      div#result
+block scripts 
+  script(src="https://code.jquery.com/jquery-3.5.1.min.js")
+  script(src="/scripts/azurestorage.js")

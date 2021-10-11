@@ -1,0 +1,1 @@
+var MainMenuApiUrl = "http://localhost:7071/api/MainMenu";
