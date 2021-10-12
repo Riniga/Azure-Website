@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AzureWebApp.Library
+namespace AzureWebsite.Library
 {
     public static class Dummy
     {

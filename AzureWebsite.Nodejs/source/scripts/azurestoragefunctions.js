@@ -1,7 +1,5 @@
 function getFiles() {
-    var pageUrl = "http://localhost:7071/api/ListAllBlobs";
-
-    fetch(pageUrl, { method: 'GET' })
+    fetch(BlobListUrl, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
             data.forEach(function (file) {
@@ -15,7 +13,7 @@ function getFiles() {
 }
 
 function upload(file) {
-    fetch('http://localhost:7071/api/UploadBlobItem?name=' + file.name,
+    fetch(BlobUploadUrl + file.name,
         {
             method: 'POST',
             headers:

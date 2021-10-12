@@ -1,8 +1,7 @@
 function getFiles()
 {
-    var pageUrl = "https://azureexperiments.blob.core.windows.net/rickarddemo";
     $.ajax({
-        type: "GET", url: pageUrl, data: {
+        type: "GET", url: storageUrl, data: {
             restype: "directory",
             comp: "list"
         },
@@ -10,7 +9,6 @@ function getFiles()
         success: function (response) {
             $(response).find("Blob").each(function () {
                 var name = $(this).find('Name').text();
-                console.log(name);
                 var url = $(this).find('Url').text();
                 $("#filelist").append("<img src='" + url + "' alt='" + name + "' width='100px'/>");
             });

@@ -71,9 +71,6 @@ function AppendMenuItem(mainMenu, menuItem)
 {
     var li = document.createElement('li');
     li.innerHTML = "<li class='nav-item'><a class='nav-link' href='#'><span>" + menuItem.title + "</span></a></li>";
-    //li.innerHTML = "<li>" + menuItem.title + "</li>";
-
-    
 
     if (menuItem.menuItems && menuItem.menuItems.length > 0)
     {
@@ -84,9 +81,6 @@ function AppendMenuItem(mainMenu, menuItem)
         li.append(subMenu);
     }
     mainMenu.append(li);
-
-    
-
 }
 
 GetMenuFromAzureFunction();

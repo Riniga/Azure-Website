@@ -37,6 +37,7 @@
     <Content Include="source\configurations\prod\configuration.js" />
     <Content Include="source\configurations\test\configuration.js" />
     <Content Include="source\configurations\uat\configuration.js" />
+    <Content Include="source\images\favicon.ico" />
     <Content Include="source\pug\blocks\sidebar.pug" />
     <Content Include="source\pug\blocks\navbar.pug">
       <SubType>Code</SubType>
@@ -44,7 +45,7 @@
     <Content Include="source\pug\pages\from_storage.pug" />
     <Content Include="source\pug\pages\images.pug" />
     <Content Include="source\scripts\azurestoragefunctions.js" />
-    <Content Include="source\scripts\azurefunctions.js" />
+    <Content Include="source\scripts\azuremenu.js" />
     <Content Include="source\scripts\azurestorage.js" />
     <Content Include="source\scripts\configuration.js" />
     <Content Include="source\pug\pages\index.pug" />
