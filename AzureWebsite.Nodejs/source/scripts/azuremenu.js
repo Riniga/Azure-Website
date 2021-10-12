@@ -63,7 +63,6 @@ function GetMenuFromAzureFunction()
             });
            
             $("#mainMenu").shieldTreeView();
-
     });
 }
 

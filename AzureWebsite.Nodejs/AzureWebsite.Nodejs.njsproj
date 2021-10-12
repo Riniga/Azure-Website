@@ -44,13 +44,15 @@
     </Content>
     <Content Include="source\pug\pages\from_storage.pug" />
     <Content Include="source\pug\pages\images.pug" />
+    <Content Include="source\pug\pages\menu.pug" />
+    <Content Include="source\scripts\cosmosfunctions.js" />
     <Content Include="source\scripts\azurestoragefunctions.js" />
     <Content Include="source\scripts\azuremenu.js" />
     <Content Include="source\scripts\azurestorage.js" />
     <Content Include="source\scripts\configuration.js" />
     <Content Include="source\pug\pages\index.pug" />
     <Content Include="source\pug\templates\startpage.pug" />
-    <Content Include="source\styles\style.css" />
+    <Content Include="source\sass\style.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="source\" />
@@ -64,7 +66,7 @@
     <Folder Include="source\pug\" />
     <Folder Include="source\pug\pages\" />
     <Folder Include="source\pug\templates\" />
-    <Folder Include="source\styles\" />
+    <Folder Include="source\sass\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
 </Project>

@@ -43,6 +43,9 @@ starta azureite med : azurite
 Använd Microsoft Azure Storage Explorer för att navigera i lokal miljö
 Du behöver justera offentlig åtkomstnivå för Lagringskonton->Emulator...->Blob Containers->images 
 
+För att emulera CosmosDB behvös Azure Cosmos DB Emulator
+Databasen måste skapas 
+
 
 
 
