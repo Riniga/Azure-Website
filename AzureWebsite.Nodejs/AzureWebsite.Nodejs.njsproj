@@ -43,6 +43,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="source\pug\pages\from_storage.pug" />
+    <Content Include="source\pug\pages\serviceworker.pug" />
     <Content Include="source\pug\pages\images.pug" />
     <Content Include="source\pug\pages\menu.pug" />
     <Content Include="source\scripts\cosmosfunctions.js" />
@@ -53,6 +54,8 @@
     <Content Include="source\pug\pages\index.pug" />
     <Content Include="source\pug\templates\startpage.pug" />
     <Content Include="source\sass\style.scss" />
+    <Content Include="source\scripts\startup.js" />
+    <Content Include="source\scripts\serviceWorker.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="source\" />

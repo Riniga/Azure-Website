@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebsite.Library", "AzureWebsite.Library\AzureWebsite.Library.csproj", "{D6931E03-07CB-47AE-8C47-2D332E775B62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureWebsite.Library", "AzureWebsite.Library\AzureWebsite.Library.csproj", "{D6931E03-07CB-47AE-8C47-2D332E775B62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebsite.Function", "AzureWebsite.Function\AzureWebsite.Function.csproj", "{9A8E0E61-B984-489D-82CB-D879DE1B82D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureWebsite.Function", "AzureWebsite.Function\AzureWebsite.Function.csproj", "{9A8E0E61-B984-489D-82CB-D879DE1B82D3}"
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "AzureWebsite.Nodejs", "AzureWebsite.Nodejs\AzureWebsite.Nodejs.njsproj", "{25A7F855-FBE1-43F4-A0FC-8973BF472EE0}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "AzureWebsite.NodeJsServer", "AzureWebsite.NodeJsServer\AzureWebsite.NodeJsServer.njsproj", "{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{25A7F855-FBE1-43F4-A0FC-8973BF472EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25A7F855-FBE1-43F4-A0FC-8973BF472EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25A7F855-FBE1-43F4-A0FC-8973BF472EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

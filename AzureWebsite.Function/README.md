@@ -36,17 +36,19 @@ Debug genom att "Attach to process" -> välj func bland processer
 
 # Miljöer
 ##Utvecklingsmiljö
+
+### Azureit
 För att kunna köra exemplet fullt ut i lokal miljö krävs Microsoft Azurite Emulator
 npm install -g azurite
 starta azureite med : azurite
 
-Använd Microsoft Azure Storage Explorer för att navigera i lokal miljö
-Du behöver justera offentlig åtkomstnivå för Lagringskonton->Emulator...->Blob Containers->images 
-
+### CosmosDB
 För att emulera CosmosDB behvös Azure Cosmos DB Emulator
 Databasen måste skapas 
 
-
+### Azure Storage Explorer
+Använd Microsoft Azure Storage Explorer för att navigera i lokal miljö
+Du behöver justera offentlig åtkomstnivå för Lagringskonton->Emulator...->Blob Containers->images 
 
 
 ##Produktionsmiljö 
