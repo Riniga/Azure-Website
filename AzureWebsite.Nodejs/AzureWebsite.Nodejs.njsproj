@@ -43,6 +43,8 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="source\pug\pages\from_storage.pug" />
+    <Content Include="source\pug\pages\inkasso\person.pug" />
+    <Content Include="source\pug\pages\inkasso\persons.pug" />
     <Content Include="source\pug\pages\serviceworker.pug" />
     <Content Include="source\pug\pages\images.pug" />
     <Content Include="source\pug\pages\menu.pug" />
@@ -54,6 +56,8 @@
     <Content Include="source\pug\pages\index.pug" />
     <Content Include="source\pug\templates\startpage.pug" />
     <Content Include="source\sass\style.scss" />
+    <Content Include="source\scripts\inkasso\person.js" />
+    <Content Include="source\scripts\inkasso\persons.js" />
     <Content Include="source\scripts\startup.js" />
     <Content Include="source\scripts\serviceWorker.js" />
   </ItemGroup>
@@ -65,11 +69,13 @@
     <Folder Include="source\configurations\test\" />
     <Folder Include="source\images\" />
     <Folder Include="source\pug\blocks\" />
+    <Folder Include="source\pug\pages\inkasso\" />
     <Folder Include="source\scripts\" />
     <Folder Include="source\pug\" />
     <Folder Include="source\pug\pages\" />
     <Folder Include="source\pug\templates\" />
     <Folder Include="source\sass\" />
+    <Folder Include="source\scripts\inkasso\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
 </Project>
