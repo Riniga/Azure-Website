@@ -27,7 +27,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["id"];
             log.LogInformation("Return a persons");
-            var person = PersonManager.GetPerson(System.Guid.Parse(id));
+            var person = PersonManager.GetPerson(int.Parse(id));
             return new OkObjectResult(person);
         }
 
@@ -44,13 +44,13 @@ namespace AzureWebApp.Function
 
             if (!string.IsNullOrEmpty((string)personObject["id"]))
             {
-                person.Id = Guid.Parse( (string)personObject["id"]);
+                person.Id = int.Parse( (string)personObject["id"]);
             }
 
             //var person = JsonConvert.DeserializeObject<Person>(personJson);
             log.LogInformation("Save a person");
             
-            if (person.Id==Guid.Empty) PersonManager.CreatePerson(person);
+            if (person.Id==0) PersonManager.CreatePerson(person);
             else PersonManager.UpdatePerson(person);
 
             return new OkObjectResult(true);

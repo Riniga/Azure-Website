@@ -21,14 +21,14 @@ namespace AzureWebsite.Library.Inkasso
                     {
                         while (reader.Read())
                         {
-                            persons.Add(new Person { Id= (Guid)reader["Id"], Name= (string)reader["Name"]});
+                            persons.Add(new Person { Id= (int)reader["Id"], Name= (string)reader["Name"]});
                         }
                     }
                 }
             }
             return persons;
         }
-        public static Person GetPerson(Guid Id)
+        public static Person GetPerson(int Id)
         {
             Person person = null;
             using (SqlConnection connection = Database.GetConnection())
@@ -84,12 +84,16 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"TRUNCATE table Persons";
+                String sql = $"SELECT TOP 1 Id FROM Persons";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.ExecuteNonQuery();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows) return;
+                    }
                 }
             }
+
             for (int i = 0; i < count; i++)
             {
                 var name = listOfNames[randomizer.Next(listOfNames.Length)].ToLower();

@@ -13,23 +13,23 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, Type, Date, Amount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions  WHERE DebtId ='{debt.Id}'";
+                String sql = $"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions  WHERE DebtId ='{debt.Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (Guid)reader["DebtId"], Contract = contract, Person = person };
+                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person };
 
                             debtsTransactions.Add(new Transaction 
                             { 
-                                Id = (Guid)reader["Id"], 
-                                TransactionType= (TransactionType)reader["Type"], 
-                                TimeStamp = (DateTime)reader["Date"],
-                                Amount= (decimal)reader["Amount"], 
+                                Id = (int)reader["TransactionId"],
+                                TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)reader["TransactionType"]),
+                                TimeStamp = (DateTime)reader["TransactionDate"],
+                                Amount= (decimal)reader["TransactionAmount"], 
                                 Debt=debt
                             });
                         }
@@ -38,28 +38,28 @@ namespace AzureWebsite.Library.Inkasso
             }
             return debtsTransactions;
         }
-        public static Transaction GetTransaction(Guid Id)
+        public static Transaction GetTransaction(int Id)
         {
             Transaction transaction = null;
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, Type, Date, Amount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions WHERE Id = '{Id}'";
+                String sql = $"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId  FROM ViewDebtsTransactions WHERE TransactionId = '{Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var debt = new Debt { Id = (Guid)reader["DebtId"], Contract = contract, Person = person };
+                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            var debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person };
                             transaction = new Transaction
                             {
-                                Id = (Guid)reader["Id"],
-                                TransactionType = (TransactionType)reader["Type"],
-                                TimeStamp = (DateTime)reader["Date"],
-                                Amount = (decimal)reader["Amount"],
+                                Id = (int)reader["TransactionId"],
+                                TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)reader["TransactionType"]),
+                                TimeStamp = (DateTime)reader["TransactionDate"],
+                                Amount = (decimal)reader["TransactionAmount"],
                                 Debt = debt
                             };
                         }

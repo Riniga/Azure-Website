@@ -19,14 +19,14 @@ namespace AzureWebsite.Library.Inkasso
                     {
                         while (reader.Read())
                         {
-                            contracts.Add(new Contract { Id = (Guid)reader["Id"], Name = (string)reader["Name"] });
+                            contracts.Add(new Contract { Id = (int)reader["Id"], Name = (string)reader["Name"] });
                         }
                     }
                 }
             }
             return contracts;
         }
-        public static Contract GetContract(Guid Id)
+        public static Contract GetContract(int Id)
         {
             Contract contract = null;
             using (SqlConnection connection = Database.GetConnection())
@@ -39,7 +39,7 @@ namespace AzureWebsite.Library.Inkasso
                     {
                         while (reader.Read())
                         {
-                            contract = new Contract { Id = (Guid)reader["Id"], Name = (string)reader["Name"] };
+                            contract = new Contract { Id = (int)reader["Id"], Name = (string)reader["Name"] };
                         }
                     }
                 }
@@ -69,10 +69,13 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"TRUNCATE table Contracts";
+                String sql = $"SELECT TOP 1 Id FROM Contracts";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.ExecuteNonQuery();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows) return;
+                    }
                 }
             }
             for (int i = 0; i < count; i++)

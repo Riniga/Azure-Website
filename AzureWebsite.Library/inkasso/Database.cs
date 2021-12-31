@@ -14,12 +14,15 @@ namespace AzureWebsite.Library.Inkasso
         private static string GetConnectionString()
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-
             builder.DataSource = "(LocalDb)\\MSSQLLocalDB";
-            builder.UserID = "inkasso";
-            builder.Password = "B252bdb8!";
+            builder.IntegratedSecurity = true;
+            builder.PersistSecurityInfo = false;
+            builder.Pooling = false;
+            builder.MultipleActiveResultSets = false;
+            builder.ConnectTimeout = 60;
+            builder.Encrypt = false;
+            builder.TrustServerCertificate = false;
             builder.InitialCatalog = "Inkasso";
-
             return builder.ConnectionString;
         }
 

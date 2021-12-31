@@ -88,9 +88,9 @@ namespace AzureWebsite.UnitTests.Inkasso
             Assert.Greater(debts.Count, NumberOfPersons);
             foreach (var debt in debts)
             {
-                Assert.AreNotEqual(debt.Id, Guid.Empty);
-                Assert.AreNotEqual(debt.Person.Id, Guid.Empty);
-                Assert.AreNotEqual(debt.Contract.Id, Guid.Empty);
+                Assert.AreNotEqual(debt.Id, 0);
+                Assert.AreNotEqual(debt.Person.Id, 0);
+                Assert.AreNotEqual(debt.Contract.Id, 0);
                 Assert.IsNotEmpty(debt.Person.Name);
                 Assert.IsNotEmpty(debt.Contract.Name);
             }
@@ -105,14 +105,44 @@ namespace AzureWebsite.UnitTests.Inkasso
                 var debts = Debts.GetDebts(person);
                 foreach (var debt in debts)
                 {
-                    Assert.AreNotEqual(debt.Id, Guid.Empty);
+                    Assert.AreNotEqual(debt.Id, 0);
                     Assert.AreEqual(debt.Person.Id, person.Id);
                     Assert.AreEqual(debt.Person.Name, person.Name);
-                    Assert.AreNotEqual(debt.Contract.Id, Guid.Empty);
+                    Assert.AreNotEqual(debt.Contract.Id, 0);
                     Assert.IsNotEmpty(debt.Contract.Name);
                 }
             }
 
+        }
+        [Test]
+        public void GetDebtTransactions()
+        {
+            var debts = Debts.GetDebts();
+            var transactions = Transactions.GetTransactions(debts[randomizer.Next(debts.Count)]);
+            Assert.Greater(debts.Count, NumberOfPersons);
+            foreach (var transaction in transactions)
+            {
+                Assert.AreNotEqual(transaction.Id, 0);
+                Assert.Greater((int)transaction.TransactionType, -1);
+                Assert.Greater(transaction.Amount, 0);
+                Assert.IsNotEmpty(transaction.Debt.Person.Name);
+                Assert.IsNotEmpty(transaction.Debt.Contract.Name);
+            }
+        }
+
+        [Test]
+        public void GetTransaction()
+        {
+            var debts = Debts.GetDebts();
+            var transactions = Transactions.GetTransactions(debts[randomizer.Next(debts.Count)]);
+            var transaction1 = transactions[randomizer.Next(transactions.Count)];
+            var transaction2 = Transactions.GetTransaction(transaction1.Id);
+
+            Assert.AreEqual(transaction1.Amount, transaction2.Amount);
+            Assert.AreEqual(transaction1.Id, transaction2.Id);
+            Assert.AreEqual(transaction1.TimeStamp, transaction2.TimeStamp);
+            Assert.AreEqual(transaction1.TransactionType, transaction2.TransactionType);
+            Assert.AreEqual(transaction1.Debt.Person.Name, transaction2.Debt.Person.Name);
         }
 
 

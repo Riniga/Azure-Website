@@ -5,7 +5,7 @@ namespace AzureWebsite.Library.Inkasso
 {
     public class Contract
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

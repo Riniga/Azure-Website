@@ -22,7 +22,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["id"];
             log.LogInformation("Return a contract");
-            var contract = AzureWebsite.Library.Inkasso.Contracts.GetContract(System.Guid.Parse(id));
+            var contract = AzureWebsite.Library.Inkasso.Contracts.GetContract(int.Parse(id));
             return new OkObjectResult(contract);
         }
     }

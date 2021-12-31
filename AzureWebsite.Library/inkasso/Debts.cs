@@ -14,16 +14,16 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts";
+                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            personDebts.Add(new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person });
+                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            personDebts.Add(new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person });
                         }
                     }
                 }
@@ -36,23 +36,23 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE PersonId ='{person.Id}'";
+                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE PersonId ='{person.Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            personDebts.Add(new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person });
+                            person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            personDebts.Add(new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person });
                         }
                     }
                 }
             }
             return personDebts;
         }
-        public static Debt GetDebt(Guid Id)
+        public static Debt GetDebt(int Id)
         {
             Debt debt = null;
             using (SqlConnection connection = Database.GetConnection())
@@ -65,9 +65,9 @@ namespace AzureWebsite.Library.Inkasso
                     {
                         while (reader.Read())
                         {
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person};
+                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            debt = new Debt { Id = (int)reader["Id"], Contract = contract, Person = person};
                         }
                     }
                 }
@@ -81,10 +81,10 @@ namespace AzureWebsite.Library.Inkasso
             {
                 connection.Open();
                 String sql = $"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')";
-                Guid debtId = Guid.Empty;
+                int debtId = 0;
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    debtId = (Guid)command.ExecuteScalar();
+                    debtId = (int)command.ExecuteScalar();
                 }
 
                 sql = $"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')";
@@ -99,15 +99,13 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"TRUNCATE table Debts";
+                String sql = $"SELECT TOP 1 Id FROM Debts";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.ExecuteNonQuery();
-                }
-                sql = $"TRUNCATE table Transactions";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows) return;
+                    }
                 }
             }
             var persons = PersonManager.GetPersons();

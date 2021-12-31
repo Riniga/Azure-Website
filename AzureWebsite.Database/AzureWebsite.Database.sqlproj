@@ -57,4 +57,18 @@
   <ItemGroup>
     <Folder Include="Properties" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="Persons.sql" />
+    <Build Include="Debts.sql" />
+    <Build Include="Contracts.sql" />
+    <Build Include="Transactions.sql" />
+    <Build Include="ViewPersonDebts.sql" />
+    <Build Include="ViewDebtsTransactions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="AzureWebsite.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LocalInkassoDB.publish.xml" />
+  </ItemGroup>
 </Project>
