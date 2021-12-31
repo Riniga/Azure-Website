@@ -30,7 +30,6 @@ namespace AzureWebsite.Library.Inkasso
             }
             return personDebts;
         }
-
         public static List<Debt> GetDebts(Person person)
         {
             var personDebts = new List<Debt>();
@@ -76,7 +75,6 @@ namespace AzureWebsite.Library.Inkasso
             if (debt == null) throw new Exception($"Debt with id {Id} not found");
             return debt;
         }
-
         public static void CreateDebt(Person person, Contract contract, decimal amount)
         {
             using (SqlConnection connection = Database.GetConnection())
@@ -96,8 +94,6 @@ namespace AzureWebsite.Library.Inkasso
                 }
             }
         }
-        
-
         public static void SeedDebts()
         {
             using (SqlConnection connection = Database.GetConnection())
@@ -131,6 +127,14 @@ namespace AzureWebsite.Library.Inkasso
                     CreateDebt(person, contract, amount);
                 }
             }
+
+            /*TODO: Seed with transactions foreach debt
+             *  each month 
+             *      set saldo=0 if saldo<100
+             *      add interest and fee (if debt>0)
+             *      add payment 
+             */
+
         }
     }
 }

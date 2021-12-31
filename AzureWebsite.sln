@@ -11,7 +11,9 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "AzureWebsite.Nodejs", "Azur
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "AzureWebsite.NodeJsServer", "AzureWebsite.NodeJsServer\AzureWebsite.NodeJsServer.njsproj", "{1C9D27E2-3BAE-44CF-A2A9-1F8174A6F3AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebsite.UnitTests", "AzureWebsite.UnitTests\AzureWebsite.UnitTests.csproj", "{FEC4C1DD-FF77-42B9-B3C2-2B31FD2C1111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureWebsite.UnitTests", "AzureWebsite.UnitTests\AzureWebsite.UnitTests.csproj", "{FEC4C1DD-FF77-42B9-B3C2-2B31FD2C1111}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "AzureWebsite.Database", "AzureWebsite.Database\AzureWebsite.Database.sqlproj", "{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{FEC4C1DD-FF77-42B9-B3C2-2B31FD2C1111}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC4C1DD-FF77-42B9-B3C2-2B31FD2C1111}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC4C1DD-FF77-42B9-B3C2-2B31FD2C1111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BD5C05-A2AB-4035-A00A-2EB54C6F4005}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

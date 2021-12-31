@@ -1,0 +1,51 @@
+@startuml
+
+title Use Case Diagram
+left to right direction
+
+actor/ :System: as S #pink;line:red;line.bold;text:red
+actor :Developer: as D
+actor :Financal: as F
+actor :Administrator: as A
+
+rectangle {
+(List all persons) as A1
+(view person prorperties and debts) as A2
+(view debts peroperties, transactions and current amount) as A3
+}
+A-->A1
+A-->A2
+A-->A3
+
+rectangle {
+(Add a new person with debt) as F1
+(Add a new transaction of type PAY) as F2
+}
+
+rectangle {
+(Create a new contract) as D1
+(Set SALDO for a debt) as D2
+}
+
+
+rectangle {
+(Update) as S1
+(Update Fee) as S1.1
+(Update Interest) as S1.2
+(End Debt) as S1.3
+}
+
+
+S1 ..> S1.3: if debt<100
+S1 ..> S1.2
+S1 ..> S1.1
+
+F-->F1
+F-->F2
+
+D-->D1
+D-->D2
+
+S-->S1
+
+@enduml

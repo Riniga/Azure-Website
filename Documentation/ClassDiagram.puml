@@ -1,0 +1,81 @@
+@startuml
+title Class Diagram - Inkasso
+
+class Debt {
+  +Id:guid
+}
+
+class Person
+{
+  +Id:guid
+  +Name:string
+}
+class Contract
+{
+  +Id:guid
+  +Name:string
+  +Intrest:decmal
+  +Fee:decimal
+}
+class Transaction
+{
+  +Id:guid
+  +Date:datetime
+  +Amount: decimal
+  
+}
+
+
+Person *-right-"*"  Debt
+Contract  *-left- "*" Debt
+Debt *-- Transaction
+
+
+
+class Contracts
+{
+  +GetContracts():List<Contact>
+  +GetContract(Id:guid):Contact
+  +CreateContract(contract:Contract)
+  +SeedContracts(count:int,companies:string)
+}
+class Persons
+{
+  +GetPersons():List<Person>
+  +GetPerson(Id:guid):Person
+  +CreatePerson(person:Person)
+  +SeedPersons(count:int,names:string)
+}
+class Debts
+{
+  +GetDebs():List<Debt>
+  +GetDebs(person:Person):List<Debt>
+  +GetDebt(Id:guid):Debt
+  +CreateDebt(person:Person,contract:Contract,Amount:int)
+  +SeedDebts()
+}
+class Transactions
+{
+  +GetTransactions(Debt:debt):List<Transactions>
+  +GetTransaction(Id:guid):Transaction
+  +CreateTransaction(transaction:Transaction)
+  +SeedTransactions()
+}
+
+Persons -right-> Person
+Contracts -left->Contract
+Debts -down->Debt
+Debts .down.>Person
+Transactions -left->Transaction
+Transactions .up.>Debt
+
+enum TransactionTypes
+{
+SALDO
+PAY
+INTREST
+FEE
+}
+
+Transactions .right.> TransactionTypes
+@enduml

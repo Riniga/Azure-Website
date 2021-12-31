@@ -9,56 +9,11 @@ namespace AzureWebsite.Library.Inkasso
     {
         public static List<Transaction> GetTransactions(Debt debt)
         {
-            var personDebts = new List<Transaction>();
+            var debtsTransactions = new List<Transaction>();
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, Date, Type, Amount FROM Transactions WHERE DebtId='{debt.Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var transaction = new Transaction { Id = (Guid)reader["Id"], };
-
-                            personDebts.Add(new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person });
-                        }
-                    }
-                }
-            }
-            return personDebts;
-        }
-
-        public static List<Debt> GetDebts(Person person)
-        {
-            var personDebts = new List<Debt>();
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"SELECT Id, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE PersonId ='{person.Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            personDebts.Add(new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person });
-                        }
-                    }
-                }
-            }
-            return personDebts;
-        }
-        public static Debt GetDebt(Guid Id)
-        {
-            Debt debt = null;
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"SELECT Id, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE Id ='{Id}'";
+                String sql = $"SELECT Id, Type, Date, Amount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions  WHERE DebtId ='{debt.Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -67,67 +22,63 @@ namespace AzureWebsite.Library.Inkasso
                         {
                             var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
                             var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (Guid)reader["Id"], Contract = contract, Person = person};
+                            debt = new Debt { Id = (Guid)reader["DebtId"], Contract = contract, Person = person };
+
+                            debtsTransactions.Add(new Transaction 
+                            { 
+                                Id = (Guid)reader["Id"], 
+                                TransactionType= (TransactionType)reader["Type"], 
+                                TimeStamp = (DateTime)reader["Date"],
+                                Amount= (decimal)reader["Amount"], 
+                                Debt=debt
+                            });
                         }
                     }
                 }
             }
-            if (debt == null) throw new Exception($"Debt with id {Id} not found");
-            return debt;
+            return debtsTransactions;
         }
-
-        public static void CreateDebt(Person person, Contract contract, decimal amount)
+        public static Transaction GetTransaction(Guid Id)
+        {
+            Transaction transaction = null;
+            using (SqlConnection connection = Database.GetConnection())
+            {
+                connection.Open();
+                String sql = $"SELECT Id, Type, Date, Amount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions WHERE Id = '{Id}'";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var contract = new Contract { Id = (Guid)reader["ContractId"], Name = (string)reader["ContractName"] };
+                            var person = new Person { Id = (Guid)reader["PersonId"], Name = (string)reader["PersonName"] };
+                            var debt = new Debt { Id = (Guid)reader["DebtId"], Contract = contract, Person = person };
+                            transaction = new Transaction
+                            {
+                                Id = (Guid)reader["Id"],
+                                TransactionType = (TransactionType)reader["Type"],
+                                TimeStamp = (DateTime)reader["Date"],
+                                Amount = (decimal)reader["Amount"],
+                                Debt = debt
+                            };
+                        }
+                    }
+                }
+            }
+            if (transaction == null) throw new Exception($"Transaction with id {Id} not found");
+            return transaction;
+        }
+        public static void CreateTransaction(Transaction transaction)
         {
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')";
-                Guid debtId = Guid.Empty;
+                String sql = $"INSERT INTO Transactions (Id, DebtId, Type, Date, Amount ) OUTPUT INSERTED.ID VALUES('{transaction.Id}',{transaction.Debt.Id}',{transaction.TransactionType}',{transaction.TimeStamp}',{transaction.Amount}')";
+                Guid transactionId = Guid.Empty;
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    debtId = (Guid)command.ExecuteScalar();
-                }
-
-                sql = $"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-        
-
-        public static void SeedDebts()
-        {
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"TRUNCATE table Debts";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-                sql = $"TRUNCATE table Transactions";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-            var persons = PersonManager.GetPersons();
-            var contracts = Contracts.GetContracts();
-
-            Random randomizer = new Random();
-            foreach(Person  person in persons)
-            {
-                double random = 5 / (double)(randomizer.Next(13) + 2);
-
-                var NumberOfPersonDebts = (decimal)Math.Ceiling(random);
-                Debug.WriteLine("Number of debts: " + NumberOfPersonDebts);
-                for (var i =0; i<NumberOfPersonDebts; i++)
-                {
-                    var contract = contracts[randomizer.Next(contracts.Count)];
-                    decimal amount = (1000 + randomizer.Next(1000)) * 100;
-                    CreateDebt(person, contract, amount);
+                    transactionId = (Guid)command.ExecuteScalar();
                 }
             }
         }
