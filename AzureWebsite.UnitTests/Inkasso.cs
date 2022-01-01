@@ -16,16 +16,15 @@ namespace AzureWebsite.UnitTests.Inkasso
         [SetUp]
         public void Setup()
         {
-            PersonManager.SeedPersons(NumberOfPersons, File.ReadAllText("persons.txt"));
             Contracts.SeedContracts(NumberOfContracts, File.ReadAllText("companies.txt"));
-            Debts.SeedDebts();
+            Persons.SeedPersons(NumberOfPersons, File.ReadAllText("persons.txt"));
         }
 
         
         [Test]
         public void ListAllPersons()
         {
-            var personer = PersonManager.GetPersons();
+            var personer = Persons.GetPersons();
             Assert.AreEqual(NumberOfPersons, personer.Count);
             foreach (var person in personer)
             {
@@ -36,7 +35,7 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void UpdatePerson()
         {
-            var persons = PersonManager.GetPersons();
+            var persons = Persons.GetPersons();
             var person = persons[randomizer.Next(persons.Count)];
             person.Name = newPersonName;
             Assert.AreEqual(newPersonName,person.Name );
@@ -44,9 +43,9 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void GetPersonById()
         {
-            var persons = PersonManager.GetPersons();
+            var persons = Persons.GetPersons();
             var person1 = persons[randomizer.Next(persons.Count)];
-            var person2 = PersonManager.GetPerson(person1.Id);
+            var person2 = Persons.GetPerson(person1.Id);
             Assert.AreEqual(person1.Name, person2.Name);
             Assert.AreEqual(person1.Id, person2.Id);
         }
@@ -99,7 +98,7 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void GetPersonsDebts()
         {
-            var persons = PersonManager.GetPersons();
+            var persons = Persons.GetPersons();
             foreach (var person in persons)
             {
                 var debts = Debts.GetDebts(person);

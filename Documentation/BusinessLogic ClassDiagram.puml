@@ -1,25 +1,25 @@
-@startuml
-title Class Diagram - Inkasso
+@startuml Business Logic 
+title Class Diagram - Inkasso Business Logic 
 
 class Debt {
-  +Id:guid
+  +Id:int
 }
 
 class Person
 {
-  +Id:guid
+  +Id:int
   +Name:string
 }
 class Contract
 {
-  +Id:guid
+  +Id:int
   +Name:string
   +Intrest:decmal
   +Fee:decimal
 }
 class Transaction
 {
-  +Id:guid
+  +Id:int
   +Date:datetime
   +Amount: decimal
   
@@ -35,29 +35,29 @@ Debt *-- Transaction
 class Contracts
 {
   +GetContracts():List<Contact>
-  +GetContract(Id:guid):Contact
+  +GetContract(Id:int):Contact
   +CreateContract(contract:Contract)
   +SeedContracts(count:int,companies:string)
 }
 class Persons
 {
   +GetPersons():List<Person>
-  +GetPerson(Id:guid):Person
-  +CreatePerson(person:Person)
+  +GetPerson(Id:int):Person
+  +CreatePerson(person:Person, contract:Contract, amount:decimal)
+  +UpdatePerson(person:Person)
   +SeedPersons(count:int,names:string)
 }
 class Debts
 {
   +GetDebs():List<Debt>
   +GetDebs(person:Person):List<Debt>
-  +GetDebt(Id:guid):Debt
+  +GetDebt(Id:int):Debt
   +CreateDebt(person:Person,contract:Contract,Amount:int)
-  +SeedDebts()
 }
 class Transactions
 {
   +GetTransactions(Debt:debt):List<Transactions>
-  +GetTransaction(Id:guid):Transaction
+  +GetTransaction(Id:int):Transaction
   +CreateTransaction(transaction:Transaction)
   +SeedTransactions()
 }

@@ -70,5 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LocalInkassoDB.publish.xml" />
+    <None Include="LocalInkassoDB_Recreate.publish.xml" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-@startuml
+@startuml Use Case
 
 title Use Case Diagram
 left to right direction
@@ -30,10 +30,29 @@ rectangle {
 
 rectangle {
 (Update) as S1
-(Update Fee) as S1.1
-(Update Interest) as S1.2
 (End Debt) as S1.3
+(Update Interest) as S1.2
+(Update Fee) as S1.1
 }
+
+note right of S1.3
+För varje skuld:
+• Om aktuell skuld är mindre än 100 kr
+->Sätt skuld till 0
+end note
+note right of S1.2
+För varje skuld, Om:
+• Saldo är mer än 0 kr
+• Kontrakt har ränta
+• Skuld inte har en transaktion för ränta senaste månaden* 
+->lägg till en transaktion ränta (beräknad utifrån aktuell skuld och ränta från kontrakt
+end note
+note right of S1.1
+För varje skuld, Om:
+• kontrakt har avgift
+• Skuld inte har en avgiftstransaktion för senaste månaden* 
+-> lägg till en transaktion ränta (beräknad utifrån aktuell skuld och ränta från kontrakt
+end note
 
 
 S1 ..> S1.3: if debt<100
@@ -47,5 +66,13 @@ D-->D1
 D-->D2
 
 S-->S1
+
+legend right
+*senaste månaden: 
+En skuld skall uppdateras med ränta och avgift samma dag som den skapades eller närmaste dag om dagsdatum inte finns i aktuell månad.
+Ränta beräknas som 1/12 av årsräntan oavsett antal dagar
+end legend
+
+
 
 @enduml

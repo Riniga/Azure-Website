@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace AzureWebsite.Library.Inkasso
 {
-    public static class PersonManager    
+    public static class Persons    
     {
         public static List<Person> GetPersons()
         {
@@ -50,17 +50,19 @@ namespace AzureWebsite.Library.Inkasso
             return person;
         }
 
-        public static void CreatePerson(Person person)
+        public static void CreatePerson(Person person, Contract contract, decimal amount)
         {
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"INSERT INTO Persons (Name) VALUES('{person.Name}')";
+                String sql = $"INSERT INTO Persons (Name) OUTPUT INSERTED.ID VALUES('{person.Name}')";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.ExecuteNonQuery();
+                    person.Id = (int)command.ExecuteScalar();
+
                 }
             }
+            Debts.CreateDebt(person, contract, amount);
         }
         public static bool UpdatePerson(Person person)
         {
@@ -79,6 +81,7 @@ namespace AzureWebsite.Library.Inkasso
         public static void SeedPersons(int count, string names)
         {
             Random randomizer = new Random();
+            var contracts = Contracts.GetContracts();
             var listOfNames = names.Replace("\"", "").Split(',');
 
             using (SqlConnection connection = Database.GetConnection())
@@ -98,7 +101,27 @@ namespace AzureWebsite.Library.Inkasso
             {
                 var name = listOfNames[randomizer.Next(listOfNames.Length)].ToLower();
                 name = char.ToUpper(name[0]) + name.Substring(1);
-                CreatePerson(new Person { Name = name });
+
+
+                var contract = contracts[randomizer.Next(contracts.Count)];
+                var person = new Person { Name = name };
+                decimal amount = (1000 + randomizer.Next(1000)) * 100;
+                CreatePerson(person, contract,amount );
+
+                var NumberOfAditionalDebts = (decimal)Math.Floor(5 / (double)(randomizer.Next(13) + 1));
+                for (var j = 0; j < NumberOfAditionalDebts; j++)
+                {
+                    contract = contracts[randomizer.Next(contracts.Count)];
+                    amount = (1000 + randomizer.Next(1000)) * 100;
+                    Debts.CreateDebt(person, contract, amount);
+                }
+
+                /*TODO: Seed with transactions foreach debt
+             *  each month 
+             *      set saldo=0 if saldo<100
+             *      add interest and fee (if debt>0)
+             *      add payment 
+             */
             }
         }
     }

@@ -94,45 +94,5 @@ namespace AzureWebsite.Library.Inkasso
                 }
             }
         }
-        public static void SeedDebts()
-        {
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"SELECT TOP 1 Id FROM Debts";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows) return;
-                    }
-                }
-            }
-            var persons = PersonManager.GetPersons();
-            var contracts = Contracts.GetContracts();
-
-            Random randomizer = new Random();
-            foreach(Person  person in persons)
-            {
-                double random = 5 / (double)(randomizer.Next(13) + 2);
-
-                var NumberOfPersonDebts = (decimal)Math.Ceiling(random);
-                Debug.WriteLine("Number of debts: " + NumberOfPersonDebts);
-                for (var i =0; i<NumberOfPersonDebts; i++)
-                {
-                    var contract = contracts[randomizer.Next(contracts.Count)];
-                    decimal amount = (1000 + randomizer.Next(1000)) * 100;
-                    CreateDebt(person, contract, amount);
-                }
-            }
-
-            /*TODO: Seed with transactions foreach debt
-             *  each month 
-             *      set saldo=0 if saldo<100
-             *      add interest and fee (if debt>0)
-             *      add payment 
-             */
-
-        }
     }
 }

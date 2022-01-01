@@ -1,0 +1,75 @@
+@startuml Inkasso API
+title Class Diagram - Inkasso API
+
+class Debt {
+  +Id:int
+}
+
+class Person
+{
+  +Id:int
+  +Name:string
+}
+class Contract
+{
+  +Id:int
+  +Name:string
+  +Intrest:decmal
+  +Fee:decimal
+}
+class Transaction
+{
+  +Id:int
+  +Date:datetime
+  +Amount: decimal
+  
+}
+
+
+Person *-right-"*"  Debt
+Contract  *-left- "*" Debt
+Debt *-- Transaction
+
+
+
+class ContractsAPI <<API>>
+{
+  +GetContracts():List<Contact>
+  +GetContract(contractId:int):Contact
+}
+class PersonsAPI <<API>>
+{
+  +GetPersons():List<Person>
+  +GetPerson(personId:int):Person
+  +CreatePerson(personName:string, contractId:int, amount:decimal)
+  +UpdatePerson(personId:int, personName:string)
+}
+class DebtsAPI <<API>>
+{
+  +GetDebs(personId:int):List<Debt>
+  +GetDebt(debtId:int):Debt
+  +CreateDebt(personId:int,contractId:int,amount:decimal)
+}
+class TransactionsAPI  <<API>>
+{
+  +GetTransactions(debtId:int):List<Transactions>
+  +CreatePaymentTransaction(debtId:int, amount:decimal)
+}
+
+Persons -right-> Person
+Contracts -left->Contract
+Debts -down->Debt
+Debts .down.>Person
+Transactions -left->Transaction
+Transactions .up.>Debt
+
+enum TransactionTypes
+{
+SALDO
+PAY
+INTREST
+FEE
+}
+
+Transactions .right.> TransactionTypes
+@enduml
