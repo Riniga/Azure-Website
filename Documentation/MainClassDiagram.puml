@@ -25,11 +25,18 @@ class Transaction
   
 }
 
+enum TransactionTypes
+{
+SALDO
+PAY
+INTREST
+FEE
+}
+
 
 Person *-right-"*"  Debt
 Contract  *-left- "*" Debt
 Debt *-- Transaction
-
 
 
 class Contracts
@@ -58,24 +65,52 @@ class Transactions
 {
   +GetTransactions(Debt:debt):List<Transactions>
   +GetTransaction(Id:int):Transaction
-  +CreateTransaction(transaction:Transaction)
+  +CreateTransaction(debt:Debt, transactionType:TransactionType, amount:decimal)
   +SeedTransactions()
 }
 
+
+class ContractsAPI <<API>>
+{
+  +GetContracts():List<Contact>
+  +GetContract(contractId:int):Contact
+}
+class PersonsAPI <<API>>
+{
+  +GetPersons():List<Person>
+  +GetPerson(personId:int):Person
+  +CreatePerson(personName:string, contractId:int, amount:decimal)
+  +UpdatePerson(personId:int, personName:string)
+}
+class DebtsAPI <<API>>
+{
+  +GetDebs(personId:int):List<Debt>
+  +GetDebt(debtId:int):Debt
+  +CreateDebt(personId:int,contractId:int,amount:decimal)
+}
+class TransactionsAPI  <<API>>
+{
+  +GetTransactions(debtId:int):List<Transactions>
+  +CreatePaymentTransaction(debtId:int, amount:decimal)
+}
+
+class AuthenticationAPI  <<API>>
+{
+  +Login(username: string: hash:string):string
+  +Logount(token:string)
+}
+
+AuthenticationAPI->Authenticator
 Persons -right-> Person
 Contracts -left->Contract
 Debts -down->Debt
 Debts .down.>Person
 Transactions -left->Transaction
 Transactions .up.>Debt
-
-enum TransactionTypes
-{
-SALDO
-PAY
-INTREST
-FEE
-}
-
 Transactions .right.> TransactionTypes
+PersonsAPI -right-> Persons 
+ContractsAPI -left-> Contracts
+DebtsAPI-down->Debts
+TransactionsAPI-up->Transactions
+
 @enduml

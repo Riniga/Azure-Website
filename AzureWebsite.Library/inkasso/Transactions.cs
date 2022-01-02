@@ -69,16 +69,16 @@ namespace AzureWebsite.Library.Inkasso
             if (transaction == null) throw new Exception($"Transaction with id {Id} not found");
             return transaction;
         }
-        public static void CreateTransaction(Transaction transaction)
+        public static void CreateTransaction(Debt debt, TransactionType transactionType, decimal amount)
         {
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"INSERT INTO Transactions (Id, DebtId, Type, Date, Amount ) OUTPUT INSERTED.ID VALUES('{transaction.Id}',{transaction.Debt.Id}',{transaction.TransactionType}',{transaction.TimeStamp}',{transaction.Amount}')";
-                Guid transactionId = Guid.Empty;
+                String sql = $"INSERT INTO Transactions (DebtId, Type, Date, Amount ) OUTPUT INSERTED.ID VALUES('{debt.Id}','{transactionType}','{DateTime.Now}','{amount}')";
+                int transactionId = 0;
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    transactionId = (Guid)command.ExecuteScalar();
+                    transactionId = (int)command.ExecuteScalar();
                 }
             }
         }

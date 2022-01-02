@@ -58,7 +58,7 @@ namespace AzureWebsite.Library.Inkasso
             using (SqlConnection connection = Database.GetConnection())
             {
                 connection.Open();
-                String sql = $"SELECT Id, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE Id ='{Id}'";
+                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE DebtId ='{Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -67,7 +67,7 @@ namespace AzureWebsite.Library.Inkasso
                         {
                             var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
                             var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (int)reader["Id"], Contract = contract, Person = person};
+                            debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person};
                         }
                     }
                 }

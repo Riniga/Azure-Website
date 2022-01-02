@@ -11,7 +11,7 @@ $(document).ready(function () {
                 data: 'id',
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<a href="/inkasso/person.html?id=' + data + '">Open</a>';
+                    return '<a href="/inkasso/editperson.html?id=' + data + '">Open</a>';
                 }
             }]
         }
