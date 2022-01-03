@@ -2,6 +2,7 @@ using AzureWebsite.Library.Inkasso;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AzureWebsite.UnitTests.Inkasso
 {
@@ -17,15 +18,15 @@ namespace AzureWebsite.UnitTests.Inkasso
         public void Setup()
         {
             Contracts.SeedContracts(NumberOfContracts, File.ReadAllText("companies.txt"));
-            Persons.SeedPersons(NumberOfPersons, File.ReadAllText("persons.txt"));
+            Persons.SeedPersonsAsync(NumberOfPersons, File.ReadAllText("persons.txt"));
         }
 
         
         [Test]
         public void ListAllPersons()
         {
-            var personer = Persons.GetPersons();
-            Assert.AreEqual(NumberOfPersons, personer.Count);
+            var personer = Persons.GetPersonsAsync().Result;
+            Assert.GreaterOrEqual(personer.Count, NumberOfPersons);
             foreach (var person in personer)
             {
                 Assert.IsNotEmpty(person.Name);
@@ -35,7 +36,7 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void UpdatePerson()
         {
-            var persons = Persons.GetPersons();
+            var persons = Persons.GetPersonsAsync().Result;
             var person = persons[randomizer.Next(persons.Count)];
             person.Name = newPersonName;
             Assert.AreEqual(newPersonName,person.Name );
@@ -43,9 +44,9 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void GetPersonById()
         {
-            var persons = Persons.GetPersons();
+            var persons = Persons.GetPersonsAsync().Result;
             var person1 = persons[randomizer.Next(persons.Count)];
-            var person2 = Persons.GetPerson(person1.Id);
+            var person2 = Persons.GetPersonAsync(person1.Id).Result;
             Assert.AreEqual(person1.Name, person2.Name);
             Assert.AreEqual(person1.Id, person2.Id);
         }
@@ -54,7 +55,7 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void ListAllContracts()
         {
-            var contracts = Contracts.GetContracts();
+            var contracts = Contracts.GetContractsAsync().Result;
             Assert.AreEqual(NumberOfContracts, contracts.Count);
             foreach (var contract in contracts)
             {
@@ -62,20 +63,13 @@ namespace AzureWebsite.UnitTests.Inkasso
                 Assert.AreNotEqual(contract.Id, Guid.Empty);
             }
         }
-        [Test]
-        public void UpdateContract()
-        {
-            var contracts = Contracts.GetContracts();
-            var contract = contracts[randomizer.Next(contracts.Count)];
-            contract.Name = newContractName;
-            Assert.AreEqual(newContractName, contract.Name);
-        }
+
         [Test]
         public void GetContractById()
         {
-            var contracts = Contracts.GetContracts();
+            var contracts = Contracts.GetContractsAsync().Result;
             var contract1 = contracts[randomizer.Next(contracts.Count)];
-            var contract2 = Contracts.GetContract(contract1.Id);
+            var contract2 = Contracts.GetContractAsync(contract1.Id).Result;
             Assert.AreEqual(contract1.Name, contract2.Name);
             Assert.AreEqual(contract1.Id, contract2.Id);
         }
@@ -83,7 +77,7 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void ListAllDebts()
         {
-            var debts = Debts.GetDebts();
+            var debts = Debts.GetDebtsAsync().Result;
             Assert.Greater(debts.Count, NumberOfPersons);
             foreach (var debt in debts)
             {
@@ -98,10 +92,10 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void GetPersonsDebts()
         {
-            var persons = Persons.GetPersons();
+            var persons = Persons.GetPersonsAsync().Result;
             foreach (var person in persons)
             {
-                var debts = Debts.GetDebts(person);
+                var debts = Debts.GetDebtsAsync(person).Result;
                 foreach (var debt in debts)
                 {
                     Assert.AreNotEqual(debt.Id, 0);
@@ -116,9 +110,10 @@ namespace AzureWebsite.UnitTests.Inkasso
         [Test]
         public void GetDebtTransactions()
         {
-            var debts = Debts.GetDebts();
-            var transactions = Transactions.GetTransactions(debts[randomizer.Next(debts.Count)]);
+            var debts = Debts.GetDebtsAsync().Result;
             Assert.Greater(debts.Count, NumberOfPersons);
+
+            var transactions= Transactions.GetTransactionsAsync(debts[randomizer.Next(debts.Count)]).Result;
             foreach (var transaction in transactions)
             {
                 Assert.AreNotEqual(transaction.Id, 0);
@@ -128,14 +123,13 @@ namespace AzureWebsite.UnitTests.Inkasso
                 Assert.IsNotEmpty(transaction.Debt.Contract.Name);
             }
         }
-
         [Test]
         public void GetTransaction()
         {
-            var debts = Debts.GetDebts();
-            var transactions = Transactions.GetTransactions(debts[randomizer.Next(debts.Count)]);
+            var debts = Debts.GetDebtsAsync().Result;
+            var transactions = Transactions.GetTransactionsAsync(debts[randomizer.Next(debts.Count)]).Result;
             var transaction1 = transactions[randomizer.Next(transactions.Count)];
-            var transaction2 = Transactions.GetTransaction(transaction1.Id);
+            var transaction2 = Transactions.GetTransactionAsync(transaction1.Id).Result;
 
             Assert.AreEqual(transaction1.Amount, transaction2.Amount);
             Assert.AreEqual(transaction1.Id, transaction2.Id);

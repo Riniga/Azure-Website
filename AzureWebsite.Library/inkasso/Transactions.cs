@@ -1,86 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace AzureWebsite.Library.Inkasso
 {
     public static class Transactions
     {
-        public static List<Transaction> GetTransactions(Debt debt)
+        public static async Task<List<Transaction>> GetTransactionsAsync(Debt debt)
         {
             var debtsTransactions = new List<Transaction>();
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions  WHERE DebtId ='{debt.Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person };
 
-                            debtsTransactions.Add(new Transaction 
-                            { 
-                                Id = (int)reader["TransactionId"],
-                                TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)reader["TransactionType"]),
-                                TimeStamp = (DateTime)reader["TransactionDate"],
-                                Amount= (decimal)reader["TransactionAmount"], 
-                                Debt=debt
-                            });
-                        }
-                    }
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId FROM ViewDebtsTransactions  WHERE DebtId ='{debt.Id}'");
+            foreach (DataTable thisTable in dataSet.Tables)
+            {
+                foreach (DataRow row in thisTable.Rows)
+                {
+                    var contract = new Contract { Id = (int)row["ContractId"], Name = (string)row["ContractName"] };
+                    var person = new Person { Id = (int)row["PersonId"], Name = (string)row["PersonName"] };
+                    debt = new Debt { Id = (int)row["DebtId"], Contract = contract, Person = person };
+
+                    debtsTransactions.Add(new Transaction
+                    {
+                        Id = (int)row["TransactionId"],
+                        TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)row["TransactionType"]),
+                        TimeStamp = (DateTime)row["TransactionDate"],
+                        Amount = (decimal)row["TransactionAmount"],
+                        Debt = debt
+                    });
                 }
             }
+
             return debtsTransactions;
+
         }
-        public static Transaction GetTransaction(int Id)
+
+        public static async Task<Transaction> GetTransactionAsync(int Id)
         {
             Transaction transaction = null;
-            using (SqlConnection connection = Database.GetConnection())
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId  FROM ViewDebtsTransactions WHERE TransactionId = '{Id}'");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT TransactionId, TransactionType, TransactionDate, TransactionAmount, ContractId, ContractName, PersonId, PersonName, DebtId  FROM ViewDebtsTransactions WHERE TransactionId = '{Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    var contract = new Contract { Id = (int)row["ContractId"], Name = (string)row["ContractName"] };
+                    var person = new Person { Id = (int)row["PersonId"], Name = (string)row["PersonName"] };
+                    var debt = new Debt { Id = (int)row["DebtId"], Contract = contract, Person = person };
+                    transaction = new Transaction
                     {
-                        while (reader.Read())
-                        {
-                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person };
-                            transaction = new Transaction
-                            {
-                                Id = (int)reader["TransactionId"],
-                                TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)reader["TransactionType"]),
-                                TimeStamp = (DateTime)reader["TransactionDate"],
-                                Amount = (decimal)reader["TransactionAmount"],
-                                Debt = debt
-                            };
-                        }
-                    }
+                        Id = (int)row["TransactionId"],
+                        TransactionType = (TransactionType)Enum.Parse(typeof(TransactionType), (string)row["TransactionType"]),
+                        TimeStamp = (DateTime)row["TransactionDate"],
+                        Amount = (decimal)row["TransactionAmount"],
+                        Debt = debt
+                    };
                 }
             }
             if (transaction == null) throw new Exception($"Transaction with id {Id} not found");
             return transaction;
         }
-        public static void CreateTransaction(Debt debt, TransactionType transactionType, decimal amount)
+        
+        public static async void CreateTransactionAsync(Debt debt, TransactionType transactionType, decimal amount)
         {
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"INSERT INTO Transactions (DebtId, Type, Date, Amount ) OUTPUT INSERTED.ID VALUES('{debt.Id}','{transactionType}','{DateTime.Now}','{amount}')";
-                int transactionId = 0;
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    transactionId = (int)command.ExecuteScalar();
-                }
-            }
+            await Database.ExecuteCommandAsync($"INSERT INTO Transactions (DebtId, Type, Date, Amount ) OUTPUT INSERTED.ID VALUES('{debt.Id}','{transactionType}','{DateTime.Now}','{amount}')");
         }
     }
 }

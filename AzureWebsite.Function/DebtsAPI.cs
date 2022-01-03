@@ -19,7 +19,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["personId"];
             log.LogInformation("Return a list of debts for a person");
-            var debts = Debts.GetDebts(new Person() { Id = int.Parse(id) } );
+            var debts = await Debts.GetDebtsAsync(new Person() { Id = int.Parse(id) } );
             return new OkObjectResult(debts);
         }
 
@@ -28,7 +28,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["debtId"];
             log.LogInformation("Return a debt with id " +id);
-            var debt = Debts.GetDebt(int.Parse(id));
+            var debt = await Debts.GetDebtAsync(int.Parse(id));
             return new OkObjectResult(debt);
         }
 
@@ -41,8 +41,8 @@ namespace AzureWebApp.Function
             Console.WriteLine("Subscription:" + personObject);
 
             Person person = new Person() { Id = (int)personObject["personId"] };
-            Contract contract = Contracts.GetContract((int)personObject["contractId"]);
-            Debts.CreateDebt(person, contract, (int)personObject["amount"]);
+            Contract contract = Contracts.GetContractAsync((int)personObject["contractId"]).Result;
+            Debts.CreateDebtAsync(person, contract, (int)personObject["amount"]);
 
             log.LogInformation("Create a new Debt for person with id "+person.Id );
 

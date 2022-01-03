@@ -1,98 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace AzureWebsite.Library.Inkasso
 {
     public static class Debts
     {
         
-        public static List<Debt> GetDebts()
+        public static async Task<List<Debt>> GetDebtsAsync()
         {
             var personDebts = new List<Debt>();
-            using (SqlConnection connection = Database.GetConnection())
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            personDebts.Add(new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person });
-                        }
-                    }
+
+                    var person = new Person { Id = (int)row["PersonId"], Name = (string)row["PersonName"] };
+                    var contract = new Contract { Id = (int)row["ContractId"], Name = (string)row["ContractName"] };
+                    personDebts.Add(new Debt { Id = (int)row["DebtId"], Contract = contract, Person = person });
                 }
             }
             return personDebts;
         }
-        public static List<Debt> GetDebts(Person person)
+        public static async Task<List<Debt>> GetDebtsAsync(Person person)
         {
             var personDebts = new List<Debt>();
-            using (SqlConnection connection = Database.GetConnection())
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE PersonId ='{person.Id}'");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE PersonId ='{person.Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            personDebts.Add(new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person });
-                        }
-                    }
+                    person = new Person { Id = (int)row["PersonId"], Name = (string)row["PersonName"] };
+                    var contract = new Contract { Id = (int)row["ContractId"], Name = (string)row["ContractName"] };
+                    personDebts.Add(new Debt { Id = (int)row["DebtId"], Contract = contract, Person = person });
                 }
             }
             return personDebts;
         }
-        public static Debt GetDebt(int Id)
+        public static async Task<Debt> GetDebtAsync(int Id)
         {
             Debt debt = null;
-            using (SqlConnection connection = Database.GetConnection())
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE DebtId ='{Id}'");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT DebtId, ContractId, PersonId, ContractName, PersonName FROM ViewPersonDebts WHERE DebtId ='{Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var contract = new Contract { Id = (int)reader["ContractId"], Name = (string)reader["ContractName"] };
-                            var person = new Person { Id = (int)reader["PersonId"], Name = (string)reader["PersonName"] };
-                            debt = new Debt { Id = (int)reader["DebtId"], Contract = contract, Person = person};
-                        }
-                    }
+                    var contract = new Contract { Id = (int)row["ContractId"], Name = (string)row["ContractName"] };
+                    var person = new Person { Id = (int)row["PersonId"], Name = (string)row["PersonName"] };
+                    debt = new Debt { Id = (int)row["DebtId"], Contract = contract, Person = person };
                 }
             }
             if (debt == null) throw new Exception($"Debt with id {Id} not found");
             return debt;
         }
-        public static void CreateDebt(Person person, Contract contract, decimal amount)
+        public static async void CreateDebtAsync(Person person, Contract contract, decimal amount)
         {
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')";
-                int debtId = 0;
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    debtId = (int)command.ExecuteScalar();
-                }
-
-                sql = $"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
+            var debtId = await Database.ExecuteCommandAsync($"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')");
+            await Database.ExecuteCommandAsync($"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')");
         }
     }
 }

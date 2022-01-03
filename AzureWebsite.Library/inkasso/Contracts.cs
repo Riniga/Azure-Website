@@ -1,64 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace AzureWebsite.Library.Inkasso
 {
     public static class Contracts
     {
-        public static List<Contract> GetContracts()
+        public static async Task<List<Contract>> GetContractsAsync()
         {
             var contracts = new List<Contract>();
-            using (SqlConnection connection = Database.GetConnection())
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT Id, Name FROM Contracts");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT Id, Name FROM Contracts";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            contracts.Add(new Contract { Id = (int)reader["Id"], Name = (string)reader["Name"] });
-                        }
-                    }
+                    contracts.Add(new Contract { Id = (int)row["Id"], Name = (string)row["Name"] });
                 }
             }
             return contracts;
         }
-        public static Contract GetContract(int Id)
+        public static async Task<Contract> GetContractAsync(int Id)
         {
             Contract contract = null;
-            using (SqlConnection connection = Database.GetConnection())
+            var contracts = new List<Contract>();
+            DataSet dataSet = await Database.GetDataSetAsync($"SELECT Id, Name FROM Contracts WHERE Id ='{Id}'");
+            foreach (DataTable thisTable in dataSet.Tables)
             {
-                connection.Open();
-                String sql = $"SELECT Id, Name FROM Contracts WHERE Id ='{Id}'";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                foreach (DataRow row in thisTable.Rows)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            contract = new Contract { Id = (int)reader["Id"], Name = (string)reader["Name"] };
-                        }
-                    }
+                    
+                    contract = new Contract { Id = (int)row["Id"], Name = (string)row["Name"] };
                 }
             }
             if (contract == null) throw new Exception($"Contract with id {Id} not found");
             return contract;
         }
 
-        public static void CreateContract(Contract contract)
+        private static async void CreateContractAsync(Contract contract)
         {
-            using (SqlConnection connection = Database.GetConnection())
-            {
-                connection.Open();
-                String sql = $"INSERT INTO Contracts (Name) VALUES('{contract.Name}')";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
+            await Database.ExecuteCommandAsync($"INSERT INTO Contracts (Name) OUTPUT INSERTED.ID VALUES('{contract.Name}')");
         }
         
         public static void SeedContracts(int count, string companies)
@@ -82,7 +64,7 @@ namespace AzureWebsite.Library.Inkasso
             {
                 var name = listOfCompanies[randomizer.Next(listOfCompanies.Length)].ToLower();
                 name = char.ToUpper(name[0]) + name.Substring(1);
-                CreateContract(new Contract { Name = name });
+                CreateContractAsync(new Contract { Name = name });
             }
         }
     }

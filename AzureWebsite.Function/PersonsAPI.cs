@@ -18,7 +18,7 @@ namespace AzureWebApp.Function
         public static async Task<IActionResult> GetPersons([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Return a list of persons");
-            var persons = Persons.GetPersons();
+            var persons = await Persons.GetPersonsAsync();
             return new OkObjectResult(persons);
         }
 
@@ -27,7 +27,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["personId"];
             log.LogInformation("Return a persons");
-            var person = Persons.GetPerson(int.Parse(id));
+            var person = await Persons.GetPersonAsync(int.Parse(id));
             return new OkObjectResult(person);
         }
 
@@ -41,8 +41,8 @@ namespace AzureWebApp.Function
 
             Person person = new Person();
             person.Name = (string)personObject["personName"];
-            Contract contract = Contracts.GetContract((int)personObject["contractId"]);
-            Persons.CreatePerson(person, contract, (int)personObject["amount"]);
+            Contract contract = await Contracts.GetContractAsync((int)personObject["contractId"]);
+            Persons.CreatePersonAsync(person, contract, (int)personObject["amount"]);
 
             log.LogInformation("Create a new person");
 
@@ -63,7 +63,7 @@ namespace AzureWebApp.Function
             person.Name = (string)personObject["personName"];
             person.Id = int.Parse((string)personObject["personId"]);
 
-            Persons.UpdatePerson(person);
+            Persons.UpdatePersonAsync(person);
             log.LogInformation("Updated person with ID: " + person.Id);
             return new OkObjectResult(true);
         }

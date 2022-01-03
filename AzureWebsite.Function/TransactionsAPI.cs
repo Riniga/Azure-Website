@@ -19,7 +19,7 @@ namespace AzureWebApp.Function
         {
             var id = req.Query["debtId"];
             log.LogInformation("Return a list of transactions for debt with id " + id);
-            var transactions = Transactions.GetTransactions(new Debt() { Id = int.Parse(id) } );
+            var transactions = await Transactions.GetTransactionsAsync(new Debt() { Id = int.Parse(id) });
             return new OkObjectResult(transactions);
         }
 
@@ -29,12 +29,9 @@ namespace AzureWebApp.Function
             string paymentObjectJson = await new StreamReader(req.Body).ReadToEndAsync();
             var paymentObject = JObject.Parse(paymentObjectJson);
             Debt debt = new Debt() { Id = ((int)paymentObject["debtId"]) };
-            Transactions.CreateTransaction(debt, TransactionType.Payment, (int)paymentObject["amount"]);
+            Transactions.CreateTransactionAsync(debt, TransactionType.Payment, (int)paymentObject["amount"]);
             log.LogInformation("Create a new payment for debt with id "+debt.Id );
             return new OkObjectResult(true);
         }
-
-       
-
     }
 }
