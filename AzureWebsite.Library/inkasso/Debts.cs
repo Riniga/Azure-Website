@@ -57,10 +57,15 @@ namespace AzureWebsite.Library.Inkasso
             if (debt == null) throw new Exception($"Debt with id {Id} not found");
             return debt;
         }
-        public static async void CreateDebtAsync(Person person, Contract contract, decimal amount)
+        public static async Task CreateDebtAsync(Person person, Contract contract, decimal amount)
         {
-            var debtId = await Database.ExecuteCommandAsync($"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')");
-            await Database.ExecuteCommandAsync($"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')");
+            //var debtId = await Database.ExecuteCommandAsync($"INSERT INTO Debts (ContractId, PersonId) OUTPUT INSERTED.ID VALUES('{contract.Id}','{person.Id}')");
+            //await Database.ExecuteCommandAsync($"INSERT INTO Transactions (DebtId, Date, Type, Amount) VALUES('{debtId}','{DateTime.Now}','{TransactionType.SetBalance}','{amount}')");
+            await Database.ExecuteCommandAsync($"EXEC sp_CreateDebt @ContractId='{contract.Id}',@PersonId='{person.Id}',@Date='{DateTime.Now}',@Type='{TransactionType.SetBalance}',@Amount='{amount}'");
+
+
+
+
         }
     }
 }

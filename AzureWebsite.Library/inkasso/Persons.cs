@@ -36,17 +36,17 @@ namespace AzureWebsite.Library.Inkasso
             return person;
         }
 
-        public static async void CreatePersonAsync(Person person, Contract contract, decimal amount)
+        public static async Task CreatePersonAsync(Person person, Contract contract, decimal amount)
         {
-            person.Id = await Database.ExecuteCommandAsync($"INSERT INTO Persons (Name) OUTPUT INSERTED.ID VALUES('{person.Name}')");
-            Debts.CreateDebtAsync(person, contract, amount);
+            person.Id = await Database.ExecuteScalarCommandAsync($"INSERT INTO Persons (Name) OUTPUT INSERTED.ID VALUES('{person.Name}')");
+            await Debts.CreateDebtAsync(person, contract, amount);
         }
         public static async void UpdatePersonAsync(Person person)
         {
             await Database.ExecuteCommandAsync($"UPDATE Persons SET Name='{person.Name}' WHERE Id='{person.Id}'");
         }
 
-        public static async void SeedPersonsAsync(int count, string names)
+        public static async Task SeedPersonsAsync(int count, string names)
         {
             List<Person> persons = new List<Person>();
             Random randomizer = new Random();
@@ -64,33 +64,32 @@ namespace AzureWebsite.Library.Inkasso
                     }
                 }
             }
+            var tasks = new List<Task>();
 
-            await Task.Run(() =>
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                var name = listOfNames[randomizer.Next(listOfNames.Length)].ToLower();
+                name = char.ToUpper(name[0]) + name.Substring(1);
+                var contract = contracts[randomizer.Next(contracts.Count)];
+                var person = new Person { Name = name };
+                decimal amount = (1000 + randomizer.Next(1000)) * 100;
+                persons.Add(person);
+                tasks.Add(CreatePersonAsync(person, contract, amount));
+            }
+            await Task.WhenAll(tasks);
+
+            tasks = new List<Task>();
+            foreach (var person in persons)
+            {
+                var NumberOfAditionalDebts = (decimal)Math.Floor(5 / (double)(randomizer.Next(13) + 1));
+                for (var j = 0; j < NumberOfAditionalDebts; j++)
                 {
-                    var name = listOfNames[randomizer.Next(listOfNames.Length)].ToLower();
-                    name = char.ToUpper(name[0]) + name.Substring(1);
                     var contract = contracts[randomizer.Next(contracts.Count)];
-                    var person = new Person { Name = name };
-                    decimal amount = (1000 + randomizer.Next(1000)) * 100;
-                    persons.Add(person);
-                    CreatePersonAsync(person, contract, amount);
+                    var amount = (1000 + randomizer.Next(1000)) * 100;
+                    tasks.Add(Debts.CreateDebtAsync(person, contract, amount));
                 }
-            });
-
-
-            //foreach (var person in persons)
-            //{ 
-            //    var NumberOfAditionalDebts = (decimal)Math.Floor(5 / (double)(randomizer.Next(13) + 1));
-            //    for (var j = 0; j < NumberOfAditionalDebts; j++)
-            //    {
-            //        var contract = contracts[randomizer.Next(contracts.Count)];
-            //        var amount = (1000 + randomizer.Next(1000)) * 100;
-            //        Debts.CreateDebtAsync(person, contract, amount);
-            //    }
-            //}
-
+            }
+            await Task.WhenAll(tasks);
             /*TODO: Seed with transactions foreach debt
          *  each month 
          *      set saldo=0 if saldo<100

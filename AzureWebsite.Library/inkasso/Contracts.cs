@@ -38,12 +38,12 @@ namespace AzureWebsite.Library.Inkasso
             return contract;
         }
 
-        private static async void CreateContractAsync(Contract contract)
+        private static async Task CreateContractAsync(Contract contract)
         {
             await Database.ExecuteCommandAsync($"INSERT INTO Contracts (Name) OUTPUT INSERTED.ID VALUES('{contract.Name}')");
         }
-        
-        public static void SeedContracts(int count, string companies)
+
+        public static async Task SeedContractsAsync(int count, string companies)
         {
             Random randomizer = new Random();
             var listOfCompanies = companies.Replace("\"", "").Split(',');
@@ -60,12 +60,18 @@ namespace AzureWebsite.Library.Inkasso
                     }
                 }
             }
+            var tasks = new List<Task>();
             for (int i = 0; i < count; i++)
             {
                 var name = listOfCompanies[randomizer.Next(listOfCompanies.Length)].ToLower();
                 name = char.ToUpper(name[0]) + name.Substring(1);
-                CreateContractAsync(new Contract { Name = name });
+                tasks.Add(CreateContractAsync(new Contract { Name = name }));
             }
+            await Task.WhenAll(tasks);
+
+
         }
+
+
     }
 }
