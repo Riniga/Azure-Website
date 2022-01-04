@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "94bf0137-70be-41ac-bb68-ff474d670ce0",
+		"name": "Transactions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetDebtTransactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/GetDebtTransactions?debtId=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"GetDebtTransactions"
+					],
+					"query": [
+						{
+							"key": "debtId",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePayment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{personId:4, contractId:4, amount: 5000}"
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/CreateDebt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"CreateDebt"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

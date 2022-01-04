@@ -56,4 +56,6 @@ Jag använder en publish profile, högerklicka och publish för att produktionss
 Aktuell miljö: SkanskaResourceGroup -> AzureFunctionApp (Function App)
 
 
+# Test
+## Använd PostMan: Ange Parametrar -> Key/Value och json i body
 

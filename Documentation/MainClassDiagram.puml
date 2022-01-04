@@ -1,0 +1,116 @@
+@startuml Business Logic 
+title Class Diagram - Inkasso Business Logic 
+
+class Debt {
+  +Id:int
+}
+
+class Person
+{
+  +Id:int
+  +Name:string
+}
+class Contract
+{
+  +Id:int
+  +Name:string
+  +Intrest:decmal
+  +Fee:decimal
+}
+class Transaction
+{
+  +Id:int
+  +Date:datetime
+  +Amount: decimal
+  
+}
+
+enum TransactionTypes
+{
+SALDO
+PAY
+INTREST
+FEE
+}
+
+
+Person *-right-"*"  Debt
+Contract  *-left- "*" Debt
+Debt *-- Transaction
+
+
+class Contracts
+{
+  +GetContracts():List<Contact>
+  +GetContract(Id:int):Contact
+  +CreateContract(contract:Contract)
+  +SeedContracts(count:int,companies:string)
+}
+class Persons
+{
+  +GetPersons():List<Person>
+  +GetPerson(Id:int):Person
+  +CreatePerson(person:Person, contract:Contract, amount:decimal)
+  +UpdatePerson(person:Person)
+  +SeedPersons(count:int,names:string)
+}
+class Debts
+{
+  +GetDebs():List<Debt>
+  +GetDebs(person:Person):List<Debt>
+  +GetDebt(Id:int):Debt
+  +CreateDebt(person:Person,contract:Contract,Amount:int)
+}
+class Transactions
+{
+  +GetTransactions(Debt:debt):List<Transactions>
+  +GetTransaction(Id:int):Transaction
+  +CreateTransaction(debt:Debt, transactionType:TransactionType, amount:decimal)
+  +SeedTransactions()
+}
+
+
+class ContractsAPI <<API>>
+{
+  +GetContracts():List<Contact>
+  +GetContract(contractId:int):Contact
+}
+class PersonsAPI <<API>>
+{
+  +GetPersons():List<Person>
+  +GetPerson(personId:int):Person
+  +CreatePerson(personName:string, contractId:int, amount:decimal)
+  +UpdatePerson(personId:int, personName:string)
+}
+class DebtsAPI <<API>>
+{
+  +GetDebs(personId:int):List<Debt>
+  +GetDebt(debtId:int):Debt
+  +CreateDebt(personId:int,contractId:int,amount:decimal)
+}
+class TransactionsAPI  <<API>>
+{
+  +GetTransactions(debtId:int):List<Transactions>
+  +CreatePaymentTransaction(debtId:int, amount:decimal)
+}
+
+class AuthenticationAPI  <<API>>
+{
+  +Login(username: string: hash:string):string
+  +Logount(token:string)
+}
+
+AuthenticationAPI->Authenticator
+Persons -right-> Person
+Contracts -left->Contract
+Debts -down->Debt
+Debts .down.>Person
+Transactions -left->Transaction
+Transactions .up.>Debt
+Transactions .right.> TransactionTypes
+PersonsAPI -right-> Persons 
+ContractsAPI -left-> Contracts
+DebtsAPI-down->Debts
+TransactionsAPI-up->Transactions
+
+@enduml

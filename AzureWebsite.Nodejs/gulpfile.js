@@ -8,13 +8,13 @@ gulp.task('clean', function () {
 
 var pug = require('gulp-pug');
 gulp.task('pug', function () {
-    return gulp.src('./source/pug/pages/*.pug')
+    return gulp.src('./source/pug/pages/**/*.pug')
         .pipe(pug({ pretty: true }))
         .pipe(gulp.dest('./public'));
 });
 
 gulp.task('scripts', function () {
-    return gulp.src('./source/scripts/*.js')
+    return gulp.src('./source/scripts/**/*.js')
         .pipe(gulp.dest('./public/scripts'));
 });
 
