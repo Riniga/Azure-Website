@@ -17,8 +17,6 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "AzureWebsite.Database", "Az
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureWebsite.Console", "AzureWebsite.Console\AzureWebsite.Console.csproj", "{0CAD4A86-0166-4E39-A9E3-0B5CC86A2221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebsite.Logging", "AzureWebsite.Logging\AzureWebsite.Logging.csproj", "{B428A992-25F3-431A-A4AD-D84F78B86EBC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,10 +53,6 @@ Global
 		{0CAD4A86-0166-4E39-A9E3-0B5CC86A2221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CAD4A86-0166-4E39-A9E3-0B5CC86A2221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CAD4A86-0166-4E39-A9E3-0B5CC86A2221}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B428A992-25F3-431A-A4AD-D84F78B86EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B428A992-25F3-431A-A4AD-D84F78B86EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B428A992-25F3-431A-A4AD-D84F78B86EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B428A992-25F3-431A-A4AD-D84F78B86EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

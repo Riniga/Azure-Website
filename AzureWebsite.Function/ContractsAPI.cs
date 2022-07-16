@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace AzureWebApp.Function
 {
@@ -13,6 +14,7 @@ namespace AzureWebApp.Function
         public static async Task<IActionResult> GetContracts([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Return a list of contracts");
+
             var contracts = await AzureWebsite.Library.Inkasso.Contracts.GetContractsAsync();
             return new OkObjectResult(contracts);
         }
@@ -21,7 +23,7 @@ namespace AzureWebApp.Function
         public static async Task<IActionResult> GetContract([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             var id = req.Query["contractId"];
-            log.LogInformation("Return a contract");
+            log.LogInformation("User requestd contract: {Id} at {Time}", id, DateTime.UtcNow);
             var contract = await AzureWebsite.Library.Inkasso.Contracts.GetContractAsync(int.Parse(id));
             return new OkObjectResult(contract);
         }
