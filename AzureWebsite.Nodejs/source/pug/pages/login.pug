@@ -1,0 +1,21 @@
+﻿extends ../templates/startpage.pug
+block content
+    h2.cover-heading Login to the site
+    div#notloggedin
+        span You are not logged please login
+        br
+        button.btn.btn-primary.m-2 Login with Google Account
+        br
+        button.btn.m-2 Login with Microsoft Account
+        form
+            label Login with Username and Password
+            div.form-group
+                label Username: 
+                input.form-control(type="email" aria-describedby="emailHelp" placeholder="Enter email")#username
+                small#emailHelp.form-text.text.muted We'll never share your email with anyone else.
+            div.form-group
+                label Password: 
+                input.form-control(type="password" placeholder="Password")#password
+                br
+                button Log In
+block scripts 

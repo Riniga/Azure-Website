@@ -43,6 +43,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="source\pug\pages\from_storage.pug" />
+    <Content Include="source\pug\pages\login.pug" />
     <Content Include="source\pug\pages\inkasso\addpayment.pug" />
     <Content Include="source\pug\pages\inkasso\adddebt.pug" />
     <Content Include="source\pug\pages\inkasso\addperson.pug" />
