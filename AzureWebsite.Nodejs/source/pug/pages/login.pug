@@ -6,7 +6,8 @@ block content
         br
         button.btn.btn-primary.m-2 Login with Google Account
         br
-        button.btn.m-2 Login with Microsoft Account
+        p#WelcomeMessage Microsoft Authentication Library For Javascript (MSAL.js) Exercise
+        button.btn.m-2#azureloginbutton(onclick="signIn()") Login with Microsoft Account
         form
             label Login with Username and Password
             div.form-group
@@ -17,5 +18,8 @@ block content
                 label Password: 
                 input.form-control(type="password" placeholder="Password")#password
                 br
-                button Log In
+                button#login Log In
+        div 
+            pre#json
 block scripts 
+    script(src="/scripts/azurelogin.js")
