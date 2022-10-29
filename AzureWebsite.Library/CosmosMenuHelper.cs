@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace AzureWebsite.Library
 {
-    public class CosmosHelper
+    public class CosmosMenuHelper
     {
         private static string partitionKeyPath = "/id";
         private static CosmosData data = new CosmosData();
@@ -51,7 +51,7 @@ namespace AzureWebsite.Library
         {
             var cosmosClient = new CosmosClient(data.EndpointUrl, data.PrimaryKey);
             Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(data.databaseId);
-            Container container = await database.CreateContainerIfNotExistsAsync(data.containerId, partitionKeyPath);
+            Container container = await database.CreateContainerIfNotExistsAsync(data.menuContainerId, partitionKeyPath);
             return container;
         }
     }

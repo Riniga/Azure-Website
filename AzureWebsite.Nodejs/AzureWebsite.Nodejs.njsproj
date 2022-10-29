@@ -53,6 +53,8 @@
     <Content Include="source\pug\pages\serviceworker.pug" />
     <Content Include="source\pug\pages\images.pug" />
     <Content Include="source\pug\pages\menu.pug" />
+    <Content Include="source\scripts\formlogin.js" />
+    <Content Include="source\scripts\azurelogin.js" />
     <Content Include="source\scripts\cosmosfunctions.js" />
     <Content Include="source\scripts\azurestoragefunctions.js" />
     <Content Include="source\scripts\azuremenu.js" />

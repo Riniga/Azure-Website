@@ -15,16 +15,15 @@ namespace AzureWebApp.Function
         public static async Task<IActionResult> GetCosmosDbMenu([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Return a menu tree");
-            Menu root = await CosmosHelper.GetMenuFromCosmosDb();
+            Menu root = await CosmosMenuHelper.GetMenuFromCosmosDb();
             return new OkObjectResult(root);
         }
-
 
         [FunctionName("CreateCosmosDbMenu")]
         public static async Task<IActionResult> CreateCosmosDbMenu([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Create a new menu to Cosmos DB ");
-            await CosmosHelper.CreateMenuInCosmosDb();
+            await CosmosMenuHelper.CreateMenuInCosmosDb();
             return new OkObjectResult("{\"Result\":\"Meu Created\"}");
         }
     }

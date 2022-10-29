@@ -1,7 +1,7 @@
 async function PageLoaded()
 {
     if (hasServiceWorkerSupport()) {
-        console.log("Service Worker Supported");
+        if (Debug) console.log("Service Worker Supported");
         const swRegistration = await registerServiceWorker();
         const permission = await requestNotificationPermission();
     }

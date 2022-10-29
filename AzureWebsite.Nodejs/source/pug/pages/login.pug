@@ -9,17 +9,35 @@ block content
         p#WelcomeMessage Microsoft Authentication Library For Javascript (MSAL.js) Exercise
         button.btn.m-2#azureloginbutton(onclick="signIn()") Login with Microsoft Account
         form
-            label Login with Username and Password
+            h3 Login with Username and Password
             div.form-group
                 label Username: 
-                input.form-control(type="email" aria-describedby="emailHelp" placeholder="Enter email")#username
+                input.form-control(type="email" aria-describedby="emailHelp" placeholder="Enter email" value="rickard")#formloginusername
                 small#emailHelp.form-text.text.muted We'll never share your email with anyone else.
             div.form-group
                 label Password: 
-                input.form-control(type="password" placeholder="Password")#password
+                input.form-control(type="password" placeholder="Password")#formloginpassword
                 br
-                button#login Log In
+        button#formloginbutton.btn.btn-primary.m-2  Log In
         div 
+            h4 Login Data
+            hr
             pre#json
+            hr
+        form
+            h3 Create User 
+            div.form-group
+                label Username: 
+                input.form-control(type="email" aria-describedby="emailHelp" placeholder="Enter email")#formcreateuserusername
+                small#emailHelp.form-text.text.muted We'll never share your email with anyone else.
+            div.form-group
+                label Name: 
+                input.form-control(type="text" placeholder="Enter name")#formcreatename
+            div.form-group
+                label Password: 
+                input.form-control(type="password" placeholder="Password")#formcreateuserpassword
+                br
+        button#formcreateuserbutton.btn.btn-primary.m-2  Register
 block scripts 
     script(src="/scripts/azurelogin.js")
+    script(src="/scripts/formlogin.js")

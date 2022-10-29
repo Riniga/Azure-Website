@@ -7,26 +7,30 @@ starta med: func start --csharp
 Debug genom att "Attach to process" -> välj func bland processer
 
 ##Konfigurationer finnas i local.settings.json
-###Lägg till för att möjliggöra CORS
-  "Host": {
-    "CORS": "*"
-  }
 
-###Åtkomst till Cosmos DB emulator med följande konfiguration...
-  "Values": {
-    "EndpointUrl": "https://localhost:8081",
-    "PrimaryKey": "SomeKey",
-    "DatabaseId": "TheIDForDatabase",
-    "ContainerId": "TheIDForContainer"
-  }
+  ### Avaktivera kryptering
+  "IsEncrypted": false
+
+  ###Lägg till för att möjliggöra CORS
+    "Host": {
+      "CORS": "*"
+    }
+
+  ###Åtkomst till Cosmos DB emulator med följande konfiguration
+    "Values": {
+      "EndpointUrl": "https://localhost:8081",
+      "PrimaryKey": "[Key from site above]",
+      "DatabaseId": "CosmosDatabase",
+      "ContainerId": "Menu"
+    }
   
-### Åtkomst till Azure Storage
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "StorageConnectionString": "UseDevelopmentStorage=true"
-    //"StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=azureexperiments;AccountKey=[Se connection string under Access Keys ];EndpointSuffix=core.windows.net"
-  }
+  ### Åtkomst till Azure Storage
+    "Values": {
+      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+      "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+      "StorageConnectionString": "UseDevelopmentStorage=true"
+      //"StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=azureexperiments;AccountKey=[Se connection string under Access Keys ];EndpointSuffix=core.windows.net"
+    }
 
 
   {
@@ -43,7 +47,7 @@ npm install -g azurite
 starta azureite med : azurite
 
 ### CosmosDB
-För att emulera CosmosDB behvös Azure Cosmos DB Emulator
+För att emulera CosmosDB behvös Azure Cosmos DB Emulator https://aka.ms/cosmosdb-emulator
 Databasen måste skapas 
 
 ### Azure Storage Explorer
