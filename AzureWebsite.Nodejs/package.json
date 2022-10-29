@@ -1,6 +1,6 @@
 {
   "name": "azure-website.nodejs",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "A basic framework web site to demonstrate the use of Node.Js, gulp, jade/pug, sass and typescript to build a static easy maintainable source code",
   "main": "app.js",
   "author": {
@@ -11,14 +11,14 @@
     "start": "node ./app.js"
   },
   "dependencies": {
-    "express": "^4.18.1",
+    "express": "^4.18.2",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-pug": "^5.0.0",
-    "open": "^8.2.1"
+    "open": "^8.4.0"
   },
   "devDependencies": {
     "gulp-sass": "^5.1.0",
-    "sass": "^1.53.0"
+    "sass": "^1.55.0"
   }
 }
