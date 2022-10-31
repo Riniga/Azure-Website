@@ -1,16 +1,9 @@
-function signInOrOut()
-{
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) signOut();
-    else signIn();
-}
-
-
 function signIn()
 {
-    var username = document.getElementById('formloginusername').value ;
-    var password = document.getElementById('formloginpassword').value ;
+    var username = document.getElementById('login_form_email').value ;
+    var password = document.getElementById('login_form_password').value ;
     var data = "{ username: '" + username + "', password: '" + password + "'  }";
+    document.getElementById("ajaxLoader").style.visibility = "visible";
 
     fetch("http://localhost:7071/api/Login",
         {
@@ -23,16 +16,20 @@ function signIn()
         .then(response => response.json())
         .then(data =>
         {
-            console.log(data);
             localStorage.setItem('currentUser', JSON.stringify(data) );
-            CheckLoggedInUser();
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
+        })
+        .catch((error) => {
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
         });
 }
 
 function signOut() 
 {
     const currentUser = localStorage.getItem('currentUser');
-
+    document.getElementById("ajaxLoader").style.visibility = "visible";
     fetch("http://localhost:7071/api/Logout",
         {
             method: 'post',
@@ -45,18 +42,23 @@ function signOut()
         .then(data =>
         {
             localStorage.removeItem('currentUser');
-            CheckLoggedInUser();
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
+        })
+        .catch((error) => {
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
         });
 }
 
 function createUser()
 {
-    var username = document.getElementById('formcreateuserusername').value ;
-    var name = document.getElementById('formcreatename').value ;
-    var password = document.getElementById('formcreateuserpassword').value ;
+    var username = document.getElementById('register_form_email').value ;
+    var name = document.getElementById('register_form_name').value ;
+    var password = document.getElementById('register_form_password').value ;
 
     var data = "{ username: '" + username + "', password: '" + password + "', name: '" + name + "'  }";
-
+    document.getElementById("ajaxLoader").style.visibility = "visible";
     fetch("http://localhost:7071/api/CreateUser",
         {
             method: 'post',
@@ -68,22 +70,60 @@ function createUser()
         .then(response => response.json())
         .then(data =>
         {
-            console.log(data);
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
+        })
+        .catch((error) => {
+            refresh();
+            document.getElementById("ajaxLoader").style.visibility = "hidden";
         });
 }
-function CheckLoggedInUser()
-{
-    const currentUser = localStorage.getItem('currentUser');
 
-    if (currentUser) document.getElementById('formloginbutton').innerText = "Log Out";
-    else document.getElementById('formloginbutton').innerText = "Logga in";
-    document.getElementById("json").innerHTML = currentUser;
+
+function toogleVisibleForm(form)
+{
+    hideAll();
+    document.getElementById(form).style.display = "block"; 
 }
 
-CheckLoggedInUser();
 
-var button = document.getElementById('formloginbutton');
-    button.addEventListener("click", signInOrOut);
+function hideAll()
+{
+    document.getElementById('login_form').style.display = "none";
+    document.getElementById('forgotpassword_form').style.display = "none";
+    document.getElementById('logout_form').style.display = "none";
+    document.getElementById('register_form').style.display = "none";
+}
 
-var button = document.getElementById('formcreateuserbutton');
+function refresh()
+{
+    currentUser = localStorage.getItem('currentUser');
+    
+
+    if (currentUser)
+    {
+        toogleVisibleForm('logout_form');
+        document.getElementById('loginLink').innerHTML  = "Logga ut " + JSON.parse(currentUser).name;
+    }
+    else
+    {
+        toogleVisibleForm('login_form');
+        document.getElementById('loginLink').innerHTML  = "Logga in";
+    }
+    $('#loginModal').modal('hide');
+}
+
+
+var button = document.getElementById('login_form_button');
+    button.addEventListener("click", signIn);
+
+
+var button = document.getElementById('register_form_button');
     button.addEventListener("click", createUser);
+
+    var button = document.getElementById('logout_form_button');
+    button.addEventListener("click", signOut);
+
+
+
+refresh();

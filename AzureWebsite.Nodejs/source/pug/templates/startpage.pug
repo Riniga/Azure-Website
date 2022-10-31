@@ -15,12 +15,14 @@ head
     link(rel='stylesheet' href='/styles/style.css' type='text/css')
 
 body
+    div#ajaxLoader Loading&#8230;
     include ../blocks/navbar.pug
     .container-fluid
       .row
         include ../blocks/sidebar.pug
         main.col-md-9.ml-sm-auto.col-lg-10.pt-3.px-4(role='main')
           block content
+    include ../blocks/login_modal.pug
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' crossorigin='anonymous')
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
@@ -31,6 +33,8 @@ body
     script(src="/scripts/configuration.js")
     script(src="/scripts/startup.js")
     script(src="/scripts/azuremenu.js")
+    script(src="/scripts/azurelogin.js")
+    script(src="/scripts/formlogin.js")
     block scripts
     
     

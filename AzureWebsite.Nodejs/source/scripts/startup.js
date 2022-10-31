@@ -27,4 +27,3 @@ const requestNotificationPermission = async () =>
 }
 
 PageLoaded();
-
