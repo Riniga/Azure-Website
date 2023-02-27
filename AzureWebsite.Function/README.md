@@ -7,35 +7,28 @@ starta med: func start --csharp
 Debug genom att "Attach to process" -> välj func bland processer
 
 ##Konfigurationer finnas i local.settings.json
-
-  ### Avaktivera kryptering
-  "IsEncrypted": false
-
-  ###Lägg till för att möjliggöra CORS
-    "Host": {
-      "CORS": "*"
+{
+    ### Avaktivera kryptering
+    "IsEncrypted": false,
+    
+    ###Lägg till för att möjliggöra CORS
+    "Host": 
+    {
+        "CORS": "*"
+    },
+    "Values": 
+    {
+      ###Åtkomst till Cosmos DB emulator med följande konfiguration
+        "EndpointUrl": "https://localhost:8081",
+        "PrimaryKey": "[Key from site above]",
+        "DatabaseId": "CosmosDatabase",
+        "ContainerId": "Menu",
+        ### Åtkomst till Azure Storage
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "StorageConnectionString": "UseDevelopmentStorage=true"
+        //"StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=azureexperiments;AccountKey=[Se connection string under Access Keys ];EndpointSuffix=core.windows.net"
     }
-
-  ###Åtkomst till Cosmos DB emulator med följande konfiguration
-    "Values": {
-      "EndpointUrl": "https://localhost:8081",
-      "PrimaryKey": "[Key from site above]",
-      "DatabaseId": "CosmosDatabase",
-      "ContainerId": "Menu"
-    }
-  
-  ### Åtkomst till Azure Storage
-    "Values": {
-      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-      "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-      "StorageConnectionString": "UseDevelopmentStorage=true"
-      //"StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=azureexperiments;AccountKey=[Se connection string under Access Keys ];EndpointSuffix=core.windows.net"
-    }
-
-
-  {
-  "IsEncrypted": false,
-  
 }
 
 # Miljöer
@@ -48,7 +41,7 @@ starta azureite med : azurite
 
 ### CosmosDB
 För att emulera CosmosDB behvös Azure Cosmos DB Emulator https://aka.ms/cosmosdb-emulator
-Databasen måste skapas 
+Databasen måste skapas: https://localhost:8081/_explorer/index.html
 
 ### Azure Storage Explorer
 Använd Microsoft Azure Storage Explorer för att navigera i lokal miljö
