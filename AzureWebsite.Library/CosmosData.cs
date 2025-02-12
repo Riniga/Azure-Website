@@ -1,12 +1,14 @@
-﻿namespace AzureWebsite.Library
+﻿using System;
+
+namespace AzureWebsite.Library
 {
     public class CosmosData
     {
-        public string EndpointUrl = "https://localhost:8081";
-        public string PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-        public string databaseId = "CosmosDatabase";
-        public string menuContainerId = "Menu";
-        public string usersContainerId = "Users"; 
-        public string loginsContainerId = "Logins";
+        public string EndpointUrl = Environment.GetEnvironmentVariable("EndpointUrl");
+        public string PrimaryKey = Environment.GetEnvironmentVariable("PrimaryKey");
+        public string databaseId = Environment.GetEnvironmentVariable("DatabaseId");
+        public string menuContainerId = Environment.GetEnvironmentVariable("MenuContainerId");
+        public string usersContainerId = Environment.GetEnvironmentVariable("UsersContainerId");
+        public string loginsContainerId = Environment.GetEnvironmentVariable("LoginsContainerId");
     }
 }
