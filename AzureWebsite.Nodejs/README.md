@@ -2,17 +2,18 @@
 A basic framework web site to demonstrate the use of Node.Js, gulp, jade/pug, sass and typescript to build a static easy maintainable source code
 
 ## Tools to use
-- Node.Js - Ramverk för lokal server och import av paket m.m.
-- Gulp - Sätta samman och skapa slutresultat
-- Pug - Ett bättre sätt att skapa html
-- Sass - Ett bättre sätt att skriva css
-- Typescript - Ett bättre sätt att skriva javascript
+- Node.Js - Ramverk fï¿½r lokal server och import av paket m.m.
+- Gulp - Sï¿½tta samman och skapa slutresultat
+- Pug - Ett bï¿½ttre sï¿½tt att skapa html
+- Sass - Ett bï¿½ttre sï¿½tt att skriva css
+- Typescript - Ett bï¿½ttre sï¿½tt att skriva javascript
 - Express - Basic local http server
 
 ## Preparation
 - Install node https://nodejs.org/en/download/
 - Update node: npm install npm@latest -g
 - Installera Gulp: npm install -g gulp
+- Installera Gulp: npm install -g live-server
 - Initiera nodejs: npm init
 
 ## Install dependencies
@@ -28,7 +29,7 @@ A basic framework web site to demonstrate the use of Node.Js, gulp, jade/pug, sa
 - npm install typescript --save-dev
 - npm install gulp-typescript --save-dev
 
-##Kod för paketet
+##Kod fï¿½r paketet
 - Gulp script: gulpfile.js
 - Http Server: app.js
 - Nodejs konfiguration: package.json
@@ -39,5 +40,8 @@ A basic framework web site to demonstrate the use of Node.Js, gulp, jade/pug, sa
 - Ren installation av paket: npm clean-install
 - Run gulpfile: gulp
 - Run script to start: npm run start
+- Starta LiveServer
+  - cd public
+  - live-server --port=9029
 
 ##Fungerar fullt ut i Visual Studio
